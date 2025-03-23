@@ -12,8 +12,6 @@ const AddModal: React.FC<AddModalProps> = ({ onClose }) => {
   const dispatch = useDispatch();
   const [currencies, setCurrencies] = useState<AssetInfo[]>([]);
   const [filteredCurrencies, setFilteredCurrencies] = useState<AssetInfo[]>([]);
-  const [selectedCurrency, setSelectedCurrency] = useState<AssetInfo | null>(null);
-  const [quantity, setQuantity] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
@@ -43,11 +41,6 @@ const AddModal: React.FC<AddModalProps> = ({ onClose }) => {
         currency.symbol.toLowerCase().includes(query)
       )
     );
-  };
-
-  const handleSelectCurrency = (currency: AssetInfo) => {
-    setSelectedCurrency(currency);
-    setQuantity(0);
   };
 
   const handleAssets = (item: AssetInfo) => {
