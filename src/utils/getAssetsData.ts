@@ -1,16 +1,28 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
+import { SymbolInfo } from "../types/types";
 
-export const fetchAssetsFromBinance = async () => {
+export const getAssetsData = async () => {
   try {
     const response = await axios.get("https://api.binance.com/api/v3/exchangeInfo");
     const data = response.data;
-    return data.symbols
-      .filter((symbol: any) => symbol.quoteAsset === "USDT")
-      .map((symbol: any) => ({
-        id: symbol.symbol,
-        symbol: symbol.baseAsset,
-      }));
+    const symbols = data.symbols
+      .filter((symbol: SymbolInfo) => symbol.quoteAsset === "USDT")
+      .map((symbol: SymbolInfo) => symbol.symbol);
+
+    const assetsData = await Promise.all(symbols.map(async (symbol: SymbolInfo) => {
+      const tickerResponse = await axios.get(`https://api.binance.com/api/v3/ticker/24hr?symbol=${symbol}`);
+      const tickerData = tickerResponse.data;
+
+      return {
+        id: tickerData.symbol,
+        symbol: tickerData.symbol.replace("USDT", ""),
+        price: parseFloat(tickerData.lastPrice),
+        change: parseFloat(tickerData.priceChangePercent), 
+      };
+    }));
+
+    return assetsData;
+
   } catch (error) {
     console.error("Ошибка при получении списка валют:", error);
     return [];
