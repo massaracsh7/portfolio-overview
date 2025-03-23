@@ -26,6 +26,12 @@ const assetsSlice = createSlice({
         asset.change24h = action.payload.change24h;
         localStorage.setItem("portfolio", JSON.stringify(state));
       }
+      const totalV = state.reduce((sum, asset) => sum + asset.quantity * asset.price, 0);
+      state.forEach(asset => {
+        asset.portfolioShare = totalV > 0
+          ? ((asset.quantity * asset.price) / totalV) * 100
+          : 0;
+      });
     },
     updateAsset: (state, action: PayloadAction<Asset>) => {
       const index = state.findIndex(asset => asset.name === action.payload.name);
