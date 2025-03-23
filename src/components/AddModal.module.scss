@@ -22,16 +22,6 @@
 .currencyList {
   list-style: none;
   padding: 0;
-  max-height: 200px;
-  overflow-y: auto;
-
-  li {
-    padding: 10px;
-    cursor: pointer;
-    &:hover {
-      background: #f0f0f0;
-    }
-  }
 }
 
 .searchInput {

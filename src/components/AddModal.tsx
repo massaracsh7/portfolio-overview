@@ -5,6 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { addAsset, updateAsset } from "../store/assetsSlice";
 import styles from "./AddModal.module.scss";
 import { RootState } from "../store/store";
+import { FixedSizeList as List } from "react-window";
+
 
 interface AddModalProps {
   onClose: () => void;
@@ -83,6 +85,30 @@ const AddModal: React.FC<AddModalProps> = ({ onClose }) => {
     }
   };
 
+  const renderRow = ({ index, style }: { index: number; style: React.CSSProperties }) => {
+    const currency = filteredCurrencies[index];
+
+    const customStyles: React.CSSProperties = {
+      backgroundColor: index % 2 === 0 ? '#f0f0f0' : '#fff',
+      fontWeight: 'bold',
+      cursor: 'pointer',
+      display: 'flex',
+      justifyContent: "space-around",
+      alignItems: "center"
+    };
+  
+    const combinedStyles = { ...style, ...customStyles };
+    return (
+      <li
+        key={currency.id}
+        style={combinedStyles}
+        onClick={() => handleSelectCurrency(currency)}
+      >
+        <span>{currency.symbol} </span> <span>{currency.price}</span> <span>{currency.change}</span>
+      </li>
+    );
+  };
+
   return (
     <div className={styles.overlay} onClick={onClose}>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
@@ -99,20 +125,20 @@ const AddModal: React.FC<AddModalProps> = ({ onClose }) => {
           className={styles.searchInput}
         />
 
-        <ul className={styles.currencyList}>
+        <div className={styles.currencyList}>
           {!isLoading && !error && filteredCurrencies.length > 0 ? (
-            filteredCurrencies.map((currency) => (
-              <li
-                key={currency.id}
-                onClick={() => handleSelectCurrency(currency)}
-              >
-                {currency.symbol} - {currency.price} - {currency.change}
-              </li>
-            ))
+            <List
+              height={300} 
+              itemCount={filteredCurrencies.length} 
+              itemSize={50}
+              width="100%"
+            >
+              {renderRow}
+            </List>
           ) : !isLoading && !error ? (
             <p>Нет такой валюты.</p>
           ) : null}
-        </ul>
+        </div>
 
         {selectedCurrency && (
           <div>
@@ -122,7 +148,6 @@ const AddModal: React.FC<AddModalProps> = ({ onClose }) => {
               value={quantity}
               onChange={(e) => setQuantity(Number(e.target.value))}
               min="0"
-              placeholder="Количество"
               className={styles.searchInput}
             />
             <div className={styles.modalBottom}>

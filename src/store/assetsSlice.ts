@@ -18,9 +18,7 @@ const assetsSlice = createSlice({
       return updated;
     },
     updateAssetPrice: (state, action: PayloadAction<{ name: string; price: number; change24h: number }>) => {
-      console.log(action.payload.name);
       const asset = state.find(item => item.name === action.payload.name);
-      console.log(asset);
       if (asset) {
         asset.price = action.payload.price;
         asset.change24h = action.payload.change24h;
