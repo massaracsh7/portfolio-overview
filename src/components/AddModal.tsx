@@ -83,7 +83,7 @@ const AddModal: React.FC<AddModalProps> = ({ onClose }) => {
           value={search}
           onChange={handleSearchChange}
           placeholder="Поиск валюты"
-          className="search-input"
+          className={styles.searchInput}
         />
 
         <ul className={styles.currencyList}>
@@ -109,16 +109,20 @@ const AddModal: React.FC<AddModalProps> = ({ onClose }) => {
               value={quantity}
               onChange={(e) => setQuantity(Number(e.target.value))}
               min="0"
+              placeholder="Количество"
+              className={styles.searchInput}
             />
-            <button onClick={handleAddAsset}>Добавить</button>
-            <button
-              onClick={() => {
-                setSelectedCurrency(null);
-                onClose();
-              }}
-            >
-              Отмена
-            </button>
+            <div className={styles.modalBottom}>
+              <button onClick={handleAddAsset}>Добавить</button>
+              <button
+                onClick={() => {
+                  setSelectedCurrency(null);
+                  onClose();
+                }}
+              >
+                Отмена
+              </button>
+            </div>
           </div>
         )}
       </div>

@@ -1,5 +1,5 @@
 import { Provider } from "react-redux";
-import "./App.css";
+import "./App.scss";
 import PortfolioOverview from "./pages/PortfolioOverview";
 import { store } from "./store/store";
 

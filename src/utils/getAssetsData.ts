@@ -1,5 +1,6 @@
 import axios from "axios";
 import { SymbolInfo } from "../types/types";
+import { v4 as uuidv4 } from "uuid";
 
 export const getAssetsData = async () => {
   try {
@@ -13,7 +14,7 @@ export const getAssetsData = async () => {
       const tickerResponse = await axios.get(`https://api.binance.com/api/v3/ticker/24hr?symbol=${symbol}`);
       const tickerData = tickerResponse.data;
       return {
-        id: tickerData.symbol,
+        id: uuidv4(),
         symbol: tickerData.symbol.replace("USDT", ""),
         price: parseFloat(tickerData.lastPrice),
         change: parseFloat(tickerData.priceChangePercent), 
