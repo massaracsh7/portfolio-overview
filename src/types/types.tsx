@@ -19,3 +19,8 @@ export interface AssetInfo {
   price: number;
   change: number;
 }
+
+export interface AssetData {
+  id: string;
+  symbol: string;
+}

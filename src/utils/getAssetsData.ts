@@ -12,7 +12,6 @@ export const getAssetsData = async () => {
     const assetsData = await Promise.all(symbols.map(async (symbol: SymbolInfo) => {
       const tickerResponse = await axios.get(`https://api.binance.com/api/v3/ticker/24hr?symbol=${symbol}`);
       const tickerData = tickerResponse.data;
-
       return {
         id: tickerData.symbol,
         symbol: tickerData.symbol.replace("USDT", ""),
@@ -21,8 +20,9 @@ export const getAssetsData = async () => {
       };
     }));
 
-    return assetsData;
+    const validAssetsData = assetsData.filter(asset => asset.price > 0 && asset.change !== 0);
 
+    return validAssetsData;
   } catch (error) {
     console.error("Ошибка при получении списка валют:", error);
     return [];
