@@ -6,7 +6,7 @@ import { addAsset, updateAsset } from "../store/assetsSlice";
 import styles from "./AddModal.module.scss";
 import { RootState } from "../store/store";
 import { FixedSizeList as List } from "react-window";
-
+import { getChangeColor } from "../utils/getChangeColor";
 
 interface AddModalProps {
   onClose: () => void;
@@ -85,18 +85,24 @@ const AddModal: React.FC<AddModalProps> = ({ onClose }) => {
     }
   };
 
-  const renderRow = ({ index, style }: { index: number; style: React.CSSProperties }) => {
+  const renderRow = ({
+    index,
+    style,
+  }: {
+    index: number;
+    style: React.CSSProperties;
+  }) => {
     const currency = filteredCurrencies[index];
 
     const customStyles: React.CSSProperties = {
-      backgroundColor: index % 2 === 0 ? '#f0f0f0' : '#fff',
-      fontWeight: 'bold',
-      cursor: 'pointer',
-      display: 'flex',
+      backgroundColor: index % 2 === 0 ? "#f0f0f0" : "#fff",
+      fontWeight: "bold",
+      cursor: "pointer",
+      display: "flex",
       justifyContent: "space-around",
-      alignItems: "center"
+      alignItems: "center",
     };
-  
+
     const combinedStyles = { ...style, ...customStyles };
     return (
       <li
@@ -104,7 +110,10 @@ const AddModal: React.FC<AddModalProps> = ({ onClose }) => {
         style={combinedStyles}
         onClick={() => handleSelectCurrency(currency)}
       >
-        <span>{currency.symbol} </span> <span>{currency.price}</span> <span>{currency.change}</span>
+        <span>{currency.symbol} </span> <span>{currency.price}</span>{" "}
+        <span style={{ color: getChangeColor(currency.change) }}>
+          {currency.change.toFixed(2)}%
+        </span>
       </li>
     );
   };
@@ -128,8 +137,8 @@ const AddModal: React.FC<AddModalProps> = ({ onClose }) => {
         <div className={styles.currencyList}>
           {!isLoading && !error && filteredCurrencies.length > 0 ? (
             <List
-              height={300} 
-              itemCount={filteredCurrencies.length} 
+              height={300}
+              itemCount={filteredCurrencies.length}
               itemSize={50}
               width="100%"
             >

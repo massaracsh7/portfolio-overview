@@ -2,7 +2,8 @@ import { useDispatch } from "react-redux";
 import { Asset } from "../types/types";
 import styles from "./ActiveTable.module.scss";
 import { removeAsset } from "../store/assetsSlice";
-import { FixedSizeList as List } from 'react-window';
+import { FixedSizeList as List } from "react-window";
+import { getChangeColor } from "../utils/getChangeColor";
 
 interface ActiveTableProps {
   portfolio: Asset[];
@@ -14,9 +15,15 @@ const ActiveTable: React.FC<ActiveTableProps> = ({ portfolio }) => {
     dispatch(removeAsset(id));
   };
 
-  const renderRow = ({ index, style }: { index: number; style: React.CSSProperties }) => {
+  const renderRow = ({
+    index,
+    style,
+  }: {
+    index: number;
+    style: React.CSSProperties;
+  }) => {
     const asset = portfolio[index];
-    
+
     return (
       <div style={style} key={asset.id}>
         <table className={styles.tableRow}>
@@ -26,7 +33,9 @@ const ActiveTable: React.FC<ActiveTableProps> = ({ portfolio }) => {
               <td>{asset.quantity}</td>
               <td>{asset.price}</td>
               <td>{(asset.quantity * asset.price).toFixed(2)}</td>
-              <td>{asset.change24h}</td>
+              <td style={{ color: getChangeColor(asset.change24h) }}>
+                {asset.change24h.toFixed(2)}%
+              </td>
               <td>{asset.portfolioShare.toFixed(2)}%</td>
             </tr>
           </tbody>
@@ -35,9 +44,8 @@ const ActiveTable: React.FC<ActiveTableProps> = ({ portfolio }) => {
     );
   };
 
-
   return (
-<div className={styles.tableWrapper}>
+    <div className={styles.tableWrapper}>
       <table className={styles.table}>
         <thead>
           <tr>
