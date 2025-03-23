@@ -1,12 +1,18 @@
+import { useDispatch } from "react-redux";
 import { Asset } from "../types/types";
 import styles from "./ActiveTable.module.scss";
+import { removeAsset } from "../store/assetsSlice";
 
 interface ActiveTableProps {
-  portfolio: Asset[]; 
+  portfolio: Asset[];
 }
 
 const ActiveTable: React.FC<ActiveTableProps> = ({ portfolio }) => {
-    console.log(portfolio);
+    console.log("Received portfolio:", portfolio);
+  const dispatch = useDispatch();
+  const removeItem = (id: string) => {
+    dispatch(removeAsset(id));
+  }
   return (
     <div className={styles.table}>
       <table>
@@ -22,7 +28,7 @@ const ActiveTable: React.FC<ActiveTableProps> = ({ portfolio }) => {
         </thead>
         <tbody>
           {portfolio.map((asset) => (
-            <tr key={asset.id}>
+            <tr key={asset.id} onClick={() => removeItem(asset.id)}>
               <td>{asset.name}</td>
               <td>{asset.quantity}</td>
               <td>{asset.price}</td>

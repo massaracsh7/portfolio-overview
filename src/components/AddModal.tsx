@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { getAssetsData } from "../utils/getAssetsData";
 import { Asset, AssetInfo } from "../types/types";
-import { useDispatch } from "react-redux";
-import { addAsset } from "../store/assetsSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { addAsset, updateAsset } from "../store/assetsSlice";
 import styles from "./AddModal.module.scss";
+import { RootState } from "../store/store";
 
 interface AddModalProps {
   onClose: () => void;
@@ -11,6 +12,7 @@ interface AddModalProps {
 
 const AddModal: React.FC<AddModalProps> = ({ onClose }) => {
   const dispatch = useDispatch();
+  const portfolio = useSelector((state: RootState) => state.assets);
   const [currencies, setCurrencies] = useState<AssetInfo[]>([]);
   const [filteredCurrencies, setFilteredCurrencies] = useState<AssetInfo[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -55,19 +57,30 @@ const AddModal: React.FC<AddModalProps> = ({ onClose }) => {
   };
   const handleAddAsset = () => {
     if (!selectedCurrency || quantity <= 0) return;
+    const existingAsset = portfolio.find(
+      (asset) => asset.name === selectedCurrency.symbol
+    );
+    if (existingAsset) {
+      const updatedAsset = {
+        ...existingAsset,
+        quantity: existingAsset.quantity + quantity,
+      };
 
-    const newAsset: Asset = {
-      id: selectedCurrency.id,
-      name: selectedCurrency.symbol,
-      quantity,
-      price: selectedCurrency.price,
-      change24h: 0,
-      portfolioShare: 0,
-    };
+      dispatch(updateAsset(updatedAsset));
+    } else {
+      const newAsset: Asset = {
+        id: selectedCurrency.id,
+        name: selectedCurrency.symbol,
+        quantity,
+        price: selectedCurrency.price,
+        change24h: 0,
+        portfolioShare: 0,
+      };
 
-    dispatch(addAsset(newAsset));
-    setSelectedCurrency(null);
-    setQuantity(0);
+      dispatch(addAsset(newAsset));
+      setSelectedCurrency(null);
+      setQuantity(0);
+    }
   };
 
   return (
@@ -113,7 +126,14 @@ const AddModal: React.FC<AddModalProps> = ({ onClose }) => {
               className={styles.searchInput}
             />
             <div className={styles.modalBottom}>
-              <button onClick={handleAddAsset}>Добавить</button>
+              <button
+                onClick={() => {
+                  handleAddAsset();
+                  onClose();
+                }}
+              >
+                Добавить
+              </button>
               <button
                 onClick={() => {
                   setSelectedCurrency(null);

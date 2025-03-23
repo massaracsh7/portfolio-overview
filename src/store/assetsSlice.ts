@@ -17,16 +17,24 @@ const assetsSlice = createSlice({
       localStorage.setItem("portfolio", JSON.stringify(updated));
       return updated;
     },
-    updateAssetPrice: (state, action: PayloadAction<{ id: string; price: number; change24h: number }>) => {
-      const asset = state.find(a => a.id === action.payload.id);
+    updateAssetPrice: (state, action: PayloadAction<{ name: string; price: number; change24h: number }>) => {
+      console.log(action.payload.name);
+      const asset = state.find(item => item.name === action.payload.name);
+      console.log(asset);
       if (asset) {
         asset.price = action.payload.price;
         asset.change24h = action.payload.change24h;
         localStorage.setItem("portfolio", JSON.stringify(state));
       }
     },
+    updateAsset: (state, action: PayloadAction<Asset>) => {
+      const index = state.findIndex(asset => asset.name === action.payload.name);
+      if (index !== -1) {
+        state[index] = action.payload; 
+      }
+    },
   },
 });
 
-export const { addAsset, removeAsset, updateAssetPrice } = assetsSlice.actions;
+export const { addAsset, removeAsset, updateAssetPrice, updateAsset } = assetsSlice.actions;
 export default assetsSlice.reducer;
