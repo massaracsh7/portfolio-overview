@@ -1,28 +1,36 @@
-import { Pie } from 'react-chartjs-2';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
-import { useSelector } from 'react-redux';
-import { Asset } from '../types/types';
-import { RootState } from '../store/store';
+/* eslint-disable react-hooks/exhaustive-deps */
+import { Pie } from "react-chartjs-2";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import { useSelector } from "react-redux";
+import { Asset } from "../types/types";
+import { RootState } from "../store/store";
+import { generateRandomColor } from "../utils/getRandomColor";
+import React from "react";
+import styles from "./PortfolioDiagram.module.scss";
+
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const PortfolioDiagram = () => {
   const portfolio: Asset[] = useSelector((state: RootState) => state.assets);
+  const backgroundColors = React.useMemo(() => {
+    return portfolio.length > 4
+      ? portfolio.map(() => generateRandomColor())
+      : ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0"];
+  }, [portfolio.join(",")]);
 
   const data = {
-    labels: portfolio.map((asset) => asset.name), 
+    labels: portfolio.map((asset) => asset.name),
     datasets: [
       {
         data: portfolio.map((asset) => asset.portfolioShare),
-        backgroundColor: ['#ff6384', '#36a2eb', '#ffcd56', '#4bc0c0'],
-        hoverBackgroundColor: ['#ff6384', '#36a2eb', '#ffcd56', '#4bc0c0'],
+        backgroundColor: backgroundColors,
       },
     ],
   };
 
   return (
-    <div>
-      <h3>Диаграмма распределения активов</h3>
+    <div className={styles.inner}>
       <Pie data={data} />
     </div>
   );
