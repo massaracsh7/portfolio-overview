@@ -14,6 +14,9 @@
 - **Socket.io-client** — работа с веб-сокетами.
 - **uuid** — генерация уникальных идентификаторов.
 
+## Деплой проекта
+* [https://portfolio-overview-gamma.vercel.app/](https://portfolio-overview-gamma.vercel.app/)
+
 ## Архитектура проекта
 ```
 portfolio-overview/
