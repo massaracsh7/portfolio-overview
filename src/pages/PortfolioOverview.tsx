@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import { updateAssetPrice } from "../store/assetsSlice";
 import useWebSocket from "../hooks/useWebSocket";
+import PortfolioDistribution from "../components/PortfolioDistribution";
 
 const PortfolioOverview: React.FC = () => {
   const dispatch = useDispatch();
@@ -35,6 +36,7 @@ const PortfolioOverview: React.FC = () => {
         <button onClick={() => setIsModalOpen(true)}>Добавить</button>
       </header>
       <main className={styles.main}>
+        <PortfolioDistribution />
         <ActiveTable portfolio={portfolio} />
       </main>
       {isModalOpen && <AddModal onClose={() => setIsModalOpen(false)} />}
