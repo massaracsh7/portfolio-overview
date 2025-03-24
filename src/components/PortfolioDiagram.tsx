@@ -8,7 +8,6 @@ import { generateRandomColor } from "../utils/getRandomColor";
 import React from "react";
 import styles from "./PortfolioDiagram.module.scss";
 
-
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const PortfolioDiagram = () => {
@@ -31,7 +30,7 @@ const PortfolioDiagram = () => {
 
   return (
     <div className={styles.inner}>
-      <Pie data={data} />
+      <Pie aria-label="Диаграмма портфеля активов" role="img" data={data} />
     </div>
   );
 };

@@ -71,7 +71,12 @@ const PortfolioChart = () => {
 
   return (
     <div className={styles.chartWrapper}>
-      <Bar data={data} options={options} />
+      <Bar
+        data={data}
+        options={options}
+        aria-label="График изменения стоимости активов"
+        role="img"
+      />
     </div>
   );
 };

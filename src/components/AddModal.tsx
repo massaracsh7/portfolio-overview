@@ -21,9 +21,7 @@ const AddModal: React.FC<AddModalProps> = ({ onClose }) => {
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
 
-  const [selectedCurrency, setSelectedCurrency] = useState<AssetInfo | null>(
-    null
-  );
+  const [selectedCurrency, setSelectedCurrency] = useState<AssetInfo | null>(null);
   const [quantity, setQuantity] = useState(0);
 
   useEffect(() => {
@@ -57,6 +55,7 @@ const AddModal: React.FC<AddModalProps> = ({ onClose }) => {
     setSelectedCurrency(currency);
     setQuantity(0);
   };
+
   const handleAddAsset = () => {
     if (!selectedCurrency || quantity <= 0) return;
     const existingAsset = portfolio.find(
@@ -109,6 +108,9 @@ const AddModal: React.FC<AddModalProps> = ({ onClose }) => {
         key={currency.id}
         style={combinedStyles}
         onClick={() => handleSelectCurrency(currency)}
+        role="option"
+        aria-selected={selectedCurrency?.id === currency.id ? "true" : "false"}
+        aria-label={`Выбрать валюту ${currency.symbol}`}
       >
         <span>{currency.symbol} </span> <span>{currency.price}</span>{" "}
         <span style={{ color: getChangeColor(currency.change) }}>
@@ -119,9 +121,15 @@ const AddModal: React.FC<AddModalProps> = ({ onClose }) => {
   };
 
   return (
-    <div className={styles.overlay} onClick={onClose}>
+    <div
+      className={styles.overlay}
+      onClick={onClose}
+      role="dialog"
+      aria-labelledby="add-asset"
+      aria-hidden={false}
+    >
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-        <h2>Выберите валюту</h2>
+        <h2 id="add-asset">Выберите валюту</h2>
 
         {isLoading && <p>Загрузка...</p>}
         {error && <p>{error}</p>}
@@ -132,6 +140,7 @@ const AddModal: React.FC<AddModalProps> = ({ onClose }) => {
           onChange={handleSearchChange}
           placeholder="Поиск валюты"
           className={styles.searchInput}
+          aria-label="Поиск валюты"
         />
 
         <div className={styles.currencyList}>
@@ -158,6 +167,7 @@ const AddModal: React.FC<AddModalProps> = ({ onClose }) => {
               onChange={(e) => setQuantity(Number(e.target.value))}
               min="0"
               className={styles.searchInput}
+              aria-label={`Введите количество ${selectedCurrency.symbol}`}
             />
             <div className={styles.modalBottom}>
               <button
@@ -165,6 +175,7 @@ const AddModal: React.FC<AddModalProps> = ({ onClose }) => {
                   handleAddAsset();
                   onClose();
                 }}
+                aria-label="Добавить актив"
               >
                 Добавить
               </button>
@@ -173,6 +184,7 @@ const AddModal: React.FC<AddModalProps> = ({ onClose }) => {
                   setSelectedCurrency(null);
                   onClose();
                 }}
+                aria-label="Отмена добавления"
               >
                 Отмена
               </button>

@@ -25,18 +25,30 @@ const ActiveTable: React.FC<ActiveTableProps> = ({ portfolio }) => {
     const asset = portfolio[index];
 
     return (
-      <div style={style} key={asset.id}>
+      <div
+        style={style}
+        key={asset.id}
+        role="row"
+        aria-labelledby={`asset-${asset.name}`}
+      >
         <table className={styles.tableRow}>
           <tbody>
-            <tr onClick={() => removeItem(asset.id)}>
-              <td>{asset.name}</td>
-              <td>{asset.quantity}</td>
-              <td>{asset.price}</td>
-              <td>{(asset.quantity * asset.price).toFixed(2)}</td>
-              <td style={{ color: getChangeColor(asset.change24h) }}>
+            <tr
+              onClick={() => removeItem(asset.id)}
+              role="row"
+              aria-label={`Удалить актив ${asset.name}`}
+            >
+              <td role="cell">{asset.name}</td>
+              <td role="cell">{asset.quantity}</td>
+              <td role="cell">{asset.price}</td>
+              <td role="cell">{(asset.quantity * asset.price).toFixed(2)}</td>
+              <td
+                role="cell"
+                style={{ color: getChangeColor(asset.change24h) }}
+              >
                 {asset.change24h.toFixed(2)}%
               </td>
-              <td>{asset.portfolioShare.toFixed(2)}%</td>
+              <td role="cell">{asset.portfolioShare.toFixed(2)}%</td>
             </tr>
           </tbody>
         </table>
@@ -46,15 +58,15 @@ const ActiveTable: React.FC<ActiveTableProps> = ({ portfolio }) => {
 
   return (
     <div className={styles.tableWrapper}>
-      <table className={styles.table}>
+      <table className={styles.table} role="table">
         <thead>
           <tr>
-            <th>Название</th>
-            <th>Количество</th>
-            <th>Цена</th>
-            <th>Общая стоимость</th>
-            <th>Изменение за 24ч</th>
-            <th>% портфеля</th>
+            <th scope="col">Название</th>
+            <th scope="col">Количество</th>
+            <th scope="col">Цена</th>
+            <th scope="col">Общая стоимость</th>
+            <th scope="col">Изменение за 24ч</th>
+            <th scope="col">% портфеля</th>
           </tr>
         </thead>
       </table>
