@@ -1,56 +1,26 @@
 .table {
   width: 100%;
   margin-top: 20px;
-
-  table {
-    width: 100%;
-  }
-
   th,
   td {
     padding: 12px;
     text-align: left;
     width: 15%;
+    white-space: normal; 
+    word-wrap: break-word;
   }
 
   th {
     font-weight: bold;
     color: #333;
-  }
-
-  .portfolioShare {
-    color: green;
-    font-weight: bold;
-  }
-
-  .negativeChange {
-    color: red;
-    font-weight: bold;
-  }
-
-  .positiveChange {
-    color: green;
-    font-weight: bold;
+    background-color: #f9f9f9;
+    white-space: normal; 
   }
 }
 
-.table-wrapper {
+.tableWrapper {
   overflow-x: auto;
   margin-top: 20px;
-}
-
-.table th,
-.table td {
-  white-space: nowrap;
-}
-
-.table th {
-  background-color: #f9f9f9;
-}
-
-.table .portfolioShare {
-  color: green;
-  font-weight: bold;
 }
 
 .tableRow {
@@ -66,5 +36,16 @@
     padding: 12px;
     text-align: left;
     width: 15%;
+  }
+}
+
+@media (max-width: 600px) {
+  .table th,
+  .table td {
+    padding: 4px;
+  }
+
+  .tableRow tbody > tr > td {
+    padding: 4px;
   }
 }
