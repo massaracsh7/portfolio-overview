@@ -1,15 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useMemo, useState } from "react";
 
 import AddModal from "../components/AddModal";
 import styles from "./PortfolioOverview.module.scss";
 import ActiveTable from "../components/ActiveTable";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
-import {
-  closeWebSocket,
-  subscribeToPriceUpdates,
-} from "../utils/webSocketUtil";
 import { updateAssetPrice } from "../store/assetsSlice";
+import useWebSocket from "../hooks/useWebSocket";
 
 const PortfolioOverview: React.FC = () => {
   const dispatch = useDispatch();
@@ -17,22 +14,19 @@ const PortfolioOverview: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const portfolio = useSelector((state: RootState) => state.assets);
 
-  useEffect(() => {
-    if (portfolio.length === 0) return;
-    const symbols = portfolio.map((asset) => asset.name);
-    subscribeToPriceUpdates(symbols, (portfolio) => {
-      const updatedAsset = {
-        name: portfolio.s.replace("USDT", ""),
-        price: parseFloat(portfolio.c),
-        change24h: parseFloat(portfolio.P),
-      };
-      dispatch(updateAssetPrice(updatedAsset));
-    });
+  const symbols = useMemo(
+    () => portfolio.map((asset) => asset.name.toLowerCase()),
+    [portfolio]
+  );
 
-    return () => {
-      closeWebSocket();
+  useWebSocket(symbols, (portfolio) => {
+    const updatedAsset = {
+      name: portfolio.s.replace("USDT", ""),
+      price: parseFloat(portfolio.c),
+      change24h: parseFloat(portfolio.P),
     };
-  }, [dispatch, portfolio]);
+    dispatch(updateAssetPrice(updatedAsset));
+  });
 
   return (
     <div className={styles.container}>
