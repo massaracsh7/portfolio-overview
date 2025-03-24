@@ -1,0 +1,9 @@
+.chartWrapper {
+    width: 50%;
+    height: auto;
+}
+@media (max-width: 600px) {
+    .chartWrapper {
+      width: 100%;
+    }
+  }
